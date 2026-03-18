@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Lock, Shield, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import apiClient from '../config/api';
 
 const SecuritySettings = ({ onOpenTwoFactor }) => {
     const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
@@ -19,7 +19,7 @@ const SecuritySettings = ({ onOpenTwoFactor }) => {
 
     const fetch2FAStatus = async () => {
         try {
-            const response = await axios.get('/api/auth/2fa/status', {
+            const response = await apiClient.get('/api/auth/2fa/status', {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             setTwoFactorEnabled(response.data.isEnabled);
@@ -44,7 +44,7 @@ const SecuritySettings = ({ onOpenTwoFactor }) => {
         setLoading(true);
         try {
             // This endpoint should be created in the backend
-            await axios.post('/api/auth/change-password', {
+            await apiClient.post('/api/auth/change-password', {
                 currentPassword: passwordData.currentPassword,
                 newPassword: passwordData.newPassword
             }, {
@@ -70,7 +70,7 @@ const SecuritySettings = ({ onOpenTwoFactor }) => {
 
         setLoading(true);
         try {
-            await axios.post('/api/auth/2fa/disable', 
+            await apiClient.post('/api/auth/2fa/disable', 
                 { password: prompt('Enter your password to confirm:') },
                 { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
             );

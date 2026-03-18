@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Users, TrendingUp, AlertCircle, CheckCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import apiClient from '../config/api';
 
 const ComplianceDashboard = () => {
     const [dashboard, setDashboard] = useState(null);
@@ -16,7 +16,7 @@ const ComplianceDashboard = () => {
 
     const fetchDashboardData = async () => {
         try {
-            const response = await axios.get('/api/compliance/dashboard', {
+            const response = await apiClient.get('/api/compliance/dashboard', {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             setDashboard(response.data.dashboard);
@@ -28,7 +28,7 @@ const ComplianceDashboard = () => {
     const fetchComplianceLogs = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`/api/compliance/logs?page=${page}&limit=20`, {
+            const response = await apiClient.get(`/api/compliance/logs?page=${page}&limit=20`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             setLogs(response.data.logs);

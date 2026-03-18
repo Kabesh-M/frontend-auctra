@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CheckCircle, Copy } from 'lucide-react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import apiClient from '../config/api';
 
 const TwoFactorSetup = ({ onSetupComplete }) => {
     const [step, setStep] = useState(1);
@@ -15,7 +15,7 @@ const TwoFactorSetup = ({ onSetupComplete }) => {
     const handleSetup = async () => {
         setLoading(true);
         try {
-            const response = await axios.post('/api/auth/2fa/setup', {}, {
+            const response = await apiClient.post('/api/auth/2fa/setup', {}, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
 
@@ -38,7 +38,7 @@ const TwoFactorSetup = ({ onSetupComplete }) => {
 
         setLoading(true);
         try {
-            await axios.post('/api/auth/2fa/verify', { token }, {
+            await apiClient.post('/api/auth/2fa/verify', { token }, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
 

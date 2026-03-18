@@ -3,7 +3,7 @@ import { User, Lock, Bell, Shield, LogOut } from 'lucide-react';
 import SecuritySettings from '../components/SecuritySettings';
 import TwoFactorSetup from '../components/TwoFactorSetup';
 import NotificationCenter from '../components/NotificationCenter';
-import axios from 'axios';
+import apiClient from '../config/api';
 import toast from 'react-hot-toast';
 
 const SettingsPage = () => {
@@ -16,8 +16,8 @@ const SettingsPage = () => {
 
     const fetchUserInfo = async () => {
         try {
-            const response = await axios.get('/api/auth/me', {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+            const response = await apiClient.get('/api/auth/me', {
+                headers: { ` }
             });
             setUserInfo(response.data);
         } catch (error) {

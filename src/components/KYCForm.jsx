@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import apiClient from '../config/api';
 
 const KYCForm = ({ onSubmitComplete }) => {
     const [step, setStep] = useState(1);
@@ -36,7 +36,7 @@ const KYCForm = ({ onSubmitComplete }) => {
 
     const fetchKYCStatus = async () => {
         try {
-            const response = await axios.get('/api/kyc/status', {
+            const response = await apiClient.get('/api/kyc/status', {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             setKycStatus(response.data);
@@ -54,7 +54,7 @@ const KYCForm = ({ onSubmitComplete }) => {
         setLoading(true);
 
         try {
-            await axios.post('/api/kyc/submit', formData, {
+            await apiClient.post('/api/kyc/submit', formData, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
 

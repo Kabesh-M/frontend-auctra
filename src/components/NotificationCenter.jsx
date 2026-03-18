@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Bell, Trash2, CheckCircle, Clock } from 'lucide-react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import apiClient from '../config/api';
 
 const NotificationCenter = () => {
     const [notifications, setNotifications] = useState([]);
@@ -12,7 +12,7 @@ const NotificationCenter = () => {
     const fetchNotifications = async (pageNum = 1) => {
         setLoading(true);
         try {
-            const response = await axios.get(`/api/notifications?page=${pageNum}&limit=10`, {
+            const response = await apiClient.get(`/api/notifications?page=${pageNum}&limit=10`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             setNotifications(response.data.notifications);
@@ -29,7 +29,7 @@ const NotificationCenter = () => {
 
     const handleMarkAsRead = async (notificationId) => {
         try {
-            await axios.put(`/api/notifications/${notificationId}/read`, {}, {
+            await apiClient.put(`/api/notifications/${notificationId}/read`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             fetchNotifications(page);
@@ -40,7 +40,7 @@ const NotificationCenter = () => {
 
     const handleMarkAllAsRead = async () => {
         try {
-            await axios.put('/api/notifications/mark-all-read', {}, {
+            await apiClient.put('/api/notifications/mark-all-read', {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             fetchNotifications(page);
@@ -52,7 +52,7 @@ const NotificationCenter = () => {
 
     const handleDelete = async (notificationId) => {
         try {
-            await axios.delete(`/api/notifications/${notificationId}`, {
+            await apiClient.delete(`/api/notifications/${notificationId}`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             fetchNotifications(page);

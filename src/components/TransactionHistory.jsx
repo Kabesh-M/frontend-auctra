@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { CreditCard, ArrowUpRight, ArrowDownLeft, Clock, CheckCircle, XCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import apiClient from '../config/api';
 
 const TransactionHistory = () => {
     const [transactions, setTransactions] = useState([]);
@@ -17,7 +17,7 @@ const TransactionHistory = () => {
             params.append('limit', 10);
             if (filter !== 'all') params.append('status', filter);
 
-            const response = await axios.get(`/api/transactions/history?${params}`, {
+            const response = await apiClient.get(`/api/transactions/history?${params}`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             setTransactions(response.data.transactions);

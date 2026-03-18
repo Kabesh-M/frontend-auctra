@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import apiClient from '../config/api';
 import { useAuth } from '../context/authCore';
 import { ShieldCheck, UserCheck, UserX, ArrowLeft, Calendar, FileText, Download, TrendingDown, X } from 'lucide-react';
 import { toast } from 'react-hot-toast';
@@ -19,10 +19,9 @@ const ManageChit = () => {
 
     const fetchData = useCallback(async () => {
         try {
-            const config = { headers: { Authorization: `Bearer ${user.token}` } };
             const [participantsRes, reportRes] = await Promise.all([
-                axios.get(`http://localhost:5000/api/chits/${id}/participants`, config),
-                axios.get(`http://localhost:5000/api/chits/${id}/report`, config)
+                apiClient.get(`/api/chits/${id}/participants`),
+                apiClient.get(`/api/chits/${id}/report`)
             ]);
             setParticipants(participantsRes.data);
             setReport(reportRes.data);
@@ -39,9 +38,8 @@ const ManageChit = () => {
 
     const handleApprove = async (participantId, status) => {
         try {
-            await axios.put(`http://localhost:5000/api/chits/${id}/approve/${participantId}`,
-                { approved: status },
-                { headers: { Authorization: `Bearer ${user.token}` } }
+            await apiClient.put(`/api/chits/${id}/approve/${participantId}`,
+                { approved: status }
             );
             toast.success(status ? 'Member Approved' : 'Member Unapproved');
             fetchData();
@@ -114,7 +112,7 @@ const ManageChit = () => {
 
         setSchedulingAuction(true);
         try {
-            await axios.post('http://localhost:5000/api/auctions',
+            await apiClient.post('/api/auctions',
                 {
                     chitId: id,
                     auctionDate: auctionDate

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import apiClient from '../config/api';
 import { useAuth } from '../context/authCore';
 import { Shield, ShieldAlert, UserCheck, UserX, Activity, Search, RefreshCw, Smartphone, Mail, Building, CreditCard, Loader2, LayoutDashboard } from 'lucide-react';
 import { toast } from 'react-hot-toast';
@@ -17,11 +17,8 @@ const AdminPanel = () => {
     const fetchData = useCallback(async () => {
         setLoading(true);
         try {
-            const config = { headers: { Authorization: `Bearer ${user.token}` } };
-
-            // Fetch users and logs separately so one failure doesn't block the other
             try {
-                const usersRes = await axios.get('http://localhost:5000/api/admin/users', config);
+                const usersRes = await apiClient.get('/api/admin/users');
                 setUsers(usersRes.data);
             } catch {
                 console.error('Failed to fetch users');
@@ -29,7 +26,7 @@ const AdminPanel = () => {
             }
 
             try {
-                const logsRes = await axios.get('http://localhost:5000/api/admin/logs', config);
+                const logsRes = await apiClient.get('/api/admin/logs');
                 setAuditLogs(logsRes.data);
             } catch {
                 console.error('Failed to fetch logs');
@@ -53,7 +50,7 @@ const AdminPanel = () => {
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
             const newStatus = currentStatus === 'active' ? 'blocked' : 'active';
-            await axios.put(`http://localhost:5000/api/admin/users/${userId}/status`, { status: newStatus }, config);
+            await apiClient.put(`/api/admin/users/${userId}/status`, { status: newStatus });
             toast.success(`User ${newStatus === 'blocked' ? 'Blocked' : 'Activated'}`);
             fetchData();
         } catch {

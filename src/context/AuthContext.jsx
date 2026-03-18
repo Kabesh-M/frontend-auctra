@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import apiClient from '../config/api';
 import { AuthContext } from './authCore';
 
 export const AuthProvider = ({ children }) => {
@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
     const signup = async (email, mobile, password, role, bankName, bankAccount) => {
         try {
-            const { data } = await axios.post('http://localhost:5000/api/auth/signup', {
+            const { data } = await apiClient.post('/api/auth/signup', {
                 email,
                 mobile,
                 password,
@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const { data } = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+            const { data } = await apiClient.post('/api/auth/login', { email, password });
             setUser(data);
             localStorage.setItem('auctra_user', JSON.stringify(data));
             return { success: true };

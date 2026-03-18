@@ -5,7 +5,7 @@ import { io } from 'socket.io-client';
 import { Timer, ArrowLeft, TrendingDown, Users, ShieldCheck } from 'lucide-react';
 import * as FramerMotion from 'framer-motion';
 import { toast } from 'react-hot-toast';
-import axios from 'axios';
+import apiClient, { API_BASE_URL } from '../config/api';
 
 const AuctionScreen = () => {
     const { id } = useParams();
@@ -20,9 +20,7 @@ const AuctionScreen = () => {
 
     const fetchAuctionDetails = useCallback(async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/auctions/${id}`, {
-                headers: { Authorization: `Bearer ${user.token}` }
-            });
+            const { data } = await apiClient.get(`/api/auctions/${id}`);
             setData(data);
             setBids((data.bids || []).map(b => ({
                 id: b._id,
@@ -45,7 +43,7 @@ const AuctionScreen = () => {
             fetchAuctionDetails();
         }, 0);
         
-        socketRef.current = io('http://localhost:5000');
+        socketRef.current = io(API_BASE_URL);
         socketRef.current.emit('join_auction', id);
 
         socketRef.current.on('new_bid', (bid) => {
@@ -70,9 +68,8 @@ const AuctionScreen = () => {
         if (auctionEnded) return toast.error('Auction has ended');
 
         try {
-            await axios.post(`http://localhost:5000/api/auctions/${id}/bid`,
-                { bidAmount: amount },
-                { headers: { Authorization: `Bearer ${user.token}` } }
+            await apiClient.post(`/api/auctions/${id}/bid`,
+                { bidAmount: amount }
             );
             setMyBid('');
         } catch (error) {

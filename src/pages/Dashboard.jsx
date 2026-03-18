@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
+import apiClient from '../config/api';
 import { useAuth } from '../context/authCore';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Users, Wallet, Calendar, TrendingDown, LogIn, ShieldCheck, LogOut } from 'lucide-react';
@@ -47,7 +47,7 @@ const Dashboard = () => {
 
     const fetchChits = useCallback(async () => {
         try {
-            const { data } = await axios.get('http://localhost:5000/api/chits/my', {
+            const { data } = await apiClient.get('/api/chits/my', {
                 headers: { Authorization: `Bearer ${user.token}` }
             });
             setChits(data);
@@ -58,7 +58,7 @@ const Dashboard = () => {
 
     const fetchAuctions = useCallback(async () => {
         try {
-            const { data } = await axios.get('http://localhost:5000/api/auctions/my', {
+            const { data } = await apiClient.get('/api/auctions/my', {
                 headers: { Authorization: `Bearer ${user.token}` }
             });
             setAuctions(data);
@@ -77,7 +77,7 @@ const Dashboard = () => {
     const handleJoinChit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/api/chits/join',
+            await apiClient.post('/api/chits/join',
                 { logCode: joinCode, password: joinPassword },
                 { headers: { Authorization: `Bearer ${user.token}` } }
             );

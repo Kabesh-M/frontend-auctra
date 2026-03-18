@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import apiClient from '../config/api';
 import { X } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
@@ -30,7 +30,7 @@ const CreateChitModal = ({ isOpen, onClose, token, onCreated }) => {
                 bidOptions: formData.bidOptions.split(',').map(Number)
             };
 
-            await axios.post('http://localhost:5000/api/chits', payload, config);
+            await apiClient.post('/api/chits', payload);
             toast.success('Chit Log Created!');
             onCreated();
             onClose();

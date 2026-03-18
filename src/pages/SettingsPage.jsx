@@ -16,9 +16,7 @@ const SettingsPage = () => {
 
     const fetchUserInfo = async () => {
         try {
-            const response = await apiClient.get('/api/auth/me', {
-                headers: { ` }
-            });
+            const response = await apiClient.get('/api/auth/me');
             setUserInfo(response.data);
         } catch (error) {
             console.error('Error fetching user info:', error);

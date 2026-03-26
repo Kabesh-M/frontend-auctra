@@ -21,6 +21,9 @@ export const AuthProvider = ({ children }) => {
             });
             setUser(data);
             localStorage.setItem('auctra_user', JSON.stringify(data));
+            if (data?.token) {
+                localStorage.setItem('token', data.token);
+            }
             return { success: true };
         } catch (error) {
             return { success: false, message: error.response?.data?.message || 'Signup failed' };
@@ -32,6 +35,9 @@ export const AuthProvider = ({ children }) => {
             const { data } = await apiClient.post('/api/auth/login', { email, password });
             setUser(data);
             localStorage.setItem('auctra_user', JSON.stringify(data));
+            if (data?.token) {
+                localStorage.setItem('token', data.token);
+            }
             return { success: true };
         } catch (error) {
             return { success: false, message: error.response?.data?.message || 'Login failed' };
@@ -41,6 +47,7 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         setUser(null);
         localStorage.removeItem('auctra_user');
+        localStorage.removeItem('token');
     };
 
     return (
